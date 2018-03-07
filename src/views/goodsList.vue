@@ -10,6 +10,9 @@
       <router-view></router-view>
 
     </div>
+    <router-link :to="{name:'cart',params:{cartId:123}}">跳转到购物车页面</router-link>
+    <button @click="jump">button-跳转到购物车页面</button>
+
   </div>
 </template>
 <style>
@@ -23,6 +26,13 @@
     data () {
       return {
         msg: 'Welcome to Your Vue.js App'
+      }
+    },
+    methods:{
+      jump(){
+        //this.$router.push('/cart')
+        //this.$router.push({name:'cart'})
+        this.$router.push({path:'/cart?goodsId=123'})
       }
     }
   }

@@ -1,15 +1,6 @@
 <template>
   <div>
-    这是商品列表页面
-    <span>{{$route.params.goodsID}}</span>
-    <span>{{$route.params.name}}
-      <router-link to="/goods/title">显示商品标题</router-link>
-      <router-link to="/goods/image">显示商品图片</router-link>
-    </span>
-    <div>
-      <router-view></router-view>
-
-    </div>
+    这里是商品图片的子组件
   </div>
 </template>
 <style>

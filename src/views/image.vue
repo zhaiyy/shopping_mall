@@ -7,8 +7,6 @@
 
 </style>
 <script>
-  import HeaderComponent from '../components/header.vue'
-  import OtherComponent from '../components/other.vue'
   export default {
     name: 'goodsList',
     data () {

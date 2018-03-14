@@ -63,7 +63,7 @@
   import '@/assets/css/base.css'
   import '@/assets/css/product.css'
   import axios from 'axios'
-  import '@/mock/goods'
+ // import '@/mock/goods'
   import NavHeader from '@/components/header'
   import NavFooter from '@/components/footer'
   import NavBread from '@/components/bread'
@@ -106,7 +106,7 @@
    methods:{
      getGoodslist(){
        axios.get('/api/goods').then(res=>{
-         this.goodsList = res.data.result
+         this.goodsList = res.data.result.data
        })
      },
      showFilter(){

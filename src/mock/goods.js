@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 
- Mock.mock('/api/goods',{
+ Mock.mock('/goods',{
   'status':'0',
   'result|1-10':[
     {

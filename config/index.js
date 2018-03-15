@@ -5,19 +5,13 @@
 const path = require('path')
 const proxy = require('./proxy')
 
-console.log(proxy)
 module.exports = {
   dev: {
 
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      '/api/goods':{
-        target:'http://127.0.0.1:3000',
-        changeOrigin:true
-      }
-    },
+    proxyTable: proxy,
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

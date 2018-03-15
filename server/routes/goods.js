@@ -19,8 +19,15 @@ mongoose.connection.on('disconnected',()=>{
 })
 
 
-router.get('/', function(res, res, next){
-  Goods.find({},(err,doc)=>{
+router.get('/', function(req, res, next){
+  const page = parseInt(req.param('page'))
+  const pageSize = parseInt(req.param('pageSize'))
+  const skip = (page-1) * pageSize
+  const sort = req.param('sort')
+  const params ={}
+  const goodModel = Goods.find(params).skip(skip).limit(pageSize);
+  goodModel.sort(sort)
+  goodModel.exec({},(err,doc)=>{
       if(err){
         res.json({
           status:'1',

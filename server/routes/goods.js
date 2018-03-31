@@ -22,9 +22,17 @@ mongoose.connection.on('disconnected',()=>{
 router.get('/', function(req, res, next){
   const page = parseInt(req.param('page'))
   const pageSize = parseInt(req.param('pageSize'))
+  const priceLevel = req.param('priceChecked')
   const skip = (page-1) * pageSize
   const sort = req.param('sort')
   const params ={}
+  if(priceLevel){
+   const priceObj = JSON.parse(priceLevel)
+    params['prodcutPrice'] = {
+      $gt:parseFloat(priceObj.startPrice),
+      $lte:parseFloat(priceObj.endPrice),
+    }
+  }
   const goodModel = Goods.find(params).skip(skip).limit(pageSize);
   goodModel.sort(sort)
   goodModel.exec({},(err,doc)=>{

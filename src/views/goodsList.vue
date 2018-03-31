@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <nav-header></nav-header>
+<div>
+  <nav-header></nav-header>
     <nav-bread>
       <span>goods</span>
     </nav-bread>
@@ -9,8 +9,8 @@
       <div class="container">
         <div class="filter-nav">
           <span class="sortby">Sort by:</span>
-          <a href="javascript:void(0)" class="default cur" @click="sortByDefault">Default</a>
-          <a href="javascript:void(0)" class="price" @click="sortByPrice">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+          <a href="javascript:void(0)" :class="{'default':true, 'cur':!sort}" @click="sortByDefault">Default</a>
+          <a href="javascript:void(0)" :class="{'price':true, 'cur':sort}" @click="sortByPrice">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
           <a href="javascript:void(0)" class="filterby stopPop" @click="showFilter">Filter by</a>
         </div>
         <div class="accessory-result">
@@ -18,7 +18,7 @@
           <div class="filter stopPop" id="filter" :class="{'filterby-show':filterBy}">
             <dl class="filter-price">
               <dt>Price:</dt>
-              <dd  @click="priceChecked = 'all'"><a href="javascript:void(0)" :class="{'cur':priceChecked == 'all'}">All</a></dd>
+              <dd  @click="setPriceFilter('all')"><a href="javascript:void(0)" :class="{'cur':priceChecked == 'all'}">All</a></dd>
               <dd v-for="(price,index) in priceFilter">
                 <a href="javascript:void(0)"  @click="setPriceFilter(index)" :class="{'cur':priceChecked == index}">{{price.startPrice}} - {{price.endPrice}}</a>
               </dd>
@@ -42,11 +42,12 @@
                   </div>
                 </li>
               </ul>
-            </div>
-            <div class="view-more-normal"
-                 infinite-scroll-disabled="busy"
-                 infinite-scroll-distance="20">
-              <img src="@/assets/loading-spinning-bubbles.svg">
+              <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy"
+                   infinite-scroll-distance="10" infinite-scroll-throttle-delay="500">
+                <img v-if='!isLoadingAll' src="@/assets/loading-spinning-bubbles.svg">
+                <span v-if='isLoadingAll'>加载完成</span>
+
+              </div>
             </div>
           </div>
         </div>
@@ -78,6 +79,7 @@
       return {
         msg: 'Welcome to Your Vue.js App',
         goodsList:[],
+        busy:true,
         priceFilter:[
           {
             startPrice:'0.00',
@@ -95,6 +97,8 @@
         priceChecked:'all',
         filterBy:false,
         overLayFlag:false,
+        isLoadingAll:false,
+        sort :false,
         params:{
           page:1,
           pageSize:10,
@@ -110,9 +114,19 @@
    },
 
    methods:{
-     getGoodslist(){
+     getGoodslist(flag = false){
        axios.get('/api/goods',{params:this.params}).then(res=>{
-         this.goodsList = res.data.result.data
+         if(flag){
+           this.goodsList =  this.goodsList.concat(res.data.result.data)
+           if(res.data.result.count <this.params.pageSize || res.data.result.count == 0){
+             this.busy = true
+             this.isLoadingAll = true
+           }
+         }else{
+           this.isLoadingAll = res.data.result.count == 0
+           this.goodsList = res.data.result.data
+           this.busy = false;
+         }
        })
      },
      showFilter(){
@@ -126,19 +140,43 @@
      setPriceFilter(index){
        this.priceChecked = index;
        this.filterBy = false;
+       this.page = 1;
        this.overLayFlag = false;
+       const price = this.priceFilter[this.priceChecked];
+       this.params = Object.assign({},this.params,{
+         sort:'prodcutPrice',
+         page:1,
+         priceChecked:price?price:''
+       })
+       this.getGoodslist()
      },
      sortByDefault(){
+       this.sort = false
        this.params = Object.assign({},this.params,{
-         sort:''
+         sort:'',
+         page:1
        })
        this.getGoodslist();
      },
      sortByPrice(){
+       this.sort = true
        this.params = Object.assign({},this.params,{
-         sort:'prodcutPrice'
+         sort:'prodcutPrice',
+         page:1
        })
        this.getGoodslist();
+     },
+     loadMore(){
+       this.busy =false
+       setTimeout(() => {
+         let page = parseInt(this.params.page)
+         page = page+1
+         this.params = Object.assign({},this.params,{
+           page:page
+         })
+         this.getGoodslist(true);
+         //this.busy = true;
+       }, 1000);
      }
     }
   }

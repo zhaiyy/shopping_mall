@@ -1,59 +1,37 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose')
-const users = require('../models/users')
-
-
-/*链接数据库*/
-mongoose.connect('mongodb://127.0.0.1:27017/goods')
-
-mongoose.connection.on('connected',()=>{
-  console.log('mongodb connect success')
-})
-mongoose.connection.on('error',()=>{
-  console.log('mongodb connect fail')
-})
-
-mongoose.connection.on('disconnected',()=>{
-  console.log('mongodb connect disconnected')
-})
+const Users = require('../models/users');
 
 
 router.get('/', function(req, res, next){
-  const page = parseInt(req.param('page'))
-  const pageSize = parseInt(req.param('pageSize'))
-  const priceLevel = req.param('priceChecked')
-  const skip = (page-1) * pageSize
-  const sort = req.param('sort')
-  const params ={}
-  if(priceLevel){
-    const priceObj = JSON.parse(priceLevel)
-    params['prodcutPrice'] = {
-      $gt:parseFloat(priceObj.startPrice),
-      $lte:parseFloat(priceObj.endPrice),
-    }
-  }
-  const goodModel = Goods.find(params).skip(skip).limit(pageSize);
-  goodModel.sort(sort)
-  goodModel.exec({},(err,doc)=>{
-      if(err){
+  res.send('respond with a resource')
+})
+router.post('/login',(req, res, next) => {
+  const params = {
+    userName:req.body.userName,
+    userPwd:req.body.userPwd,
+  };
+  Users.findOne(params,  (err, doc) => {
+    if(err || doc == null){
+      res.json({
+        status:'1',
+        'msg':err?err:'账号密码错误'
+      })
+    }else{
+      res.cookie("userid",doc.userid,{
+          path:'/',
+          maxAge:1000*60*60
+        });
+       // res.session.user = doc;
         res.json({
-          status:'1',
-          'msg':err.message
-        })
-      }else{
-        res.json({
-          status:'0',
-          'msg':'',
+          status: '0',
+          'msg': 'success',
           result:{
-            count:doc.length,
-            data:doc
+            "userName":doc.userName,
           }
         })
-      }
     }
-  )
+  })
 })
-
 module.exports = router;
 

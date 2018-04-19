@@ -53,8 +53,27 @@
         </div>
       </div>
     </div>
+
     <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
-    <nav-footer></nav-footer>
+  <model :mdShow="mdShow" v-on:close="closeModel">
+    <p slot="message">请先登录否则无法加入</p>
+    <div slot="btnGruop">
+      <a class="btn btn--m" @click="mdShow = false">关闭</a>
+    </div>
+  </model>
+  <model :mdShow="mdShowCart" v-on:close="closeModel">
+    <p slot="message">
+      <svg class="icon-status-ok">
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-status-ok"></use>
+      </svg>
+      <span>加入购物车成功</span>
+    </p>
+    <div slot="btnGruop">
+      <a class="btn btn--m" @click="mdShowCart = false">继续购物</a>
+      <router-link class="btn btn--m" to="/cart">查看购物车</router-link>
+    </div>
+  </model>
+  <nav-footer></nav-footer>
   </div>
 </template>
 <style>
@@ -68,18 +87,22 @@
   import NavHeader from '@/components/header'
   import NavFooter from '@/components/footer'
   import NavBread from '@/components/bread'
+  import Model from '@/components/model'
  export default {
    name: 'goodsList',
    components: {
      NavHeader,
      NavFooter,
-     NavBread
+     NavBread,
+     Model
    },
     data () {
       return {
         msg: 'Welcome to Your Vue.js App',
         goodsList:[],
         busy:true,
+        mdShow:false,
+        mdShowCart:false,
         priceFilter:[
           {
             startPrice:'0.00',
@@ -175,7 +198,9 @@
          if(res.data.status){
            alert(res.data.msg)
          }else{
-           alert('添加成功')
+           this.mdShowCart = true;
+
+          // alert('添加成功')
          }
        })
      },
@@ -190,6 +215,10 @@
          this.getGoodslist(true);
          //this.busy = true;
        }, 1000);
+     },
+     closeModel(){
+       this.mdShow = false;
+       this.mdShowCart = false;
      }
     }
   }

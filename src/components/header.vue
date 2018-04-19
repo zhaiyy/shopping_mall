@@ -153,6 +153,7 @@ export default{
   computed:{
   },
   mounted(){
+    this.checkLogin()
   },
   methods:{
     login(){
@@ -161,7 +162,7 @@ export default{
         userPwd:this.userPwd,
       }).then(res =>{
         const  data = res.data;
-        if(data.status == '1'){
+        if(data.status){
           this.errorTip = true;
         }else {
           this.nickName = data.result['userName'];
@@ -175,7 +176,7 @@ export default{
     logout(){
       axios.post('/api/users/logout').then(res =>{
         const data = res.data
-        if(data.status == '1'){
+        if(data.status){
           alert('登出失败')
         }else {
           this.nickName = '';
@@ -183,6 +184,21 @@ export default{
         }
       })
 
+    },
+    checkLogin(){
+      axios.post('/api/users/checkLogin').then(res =>{
+        const data = res.data
+        if(data.status){
+          alert(data.msg)
+          this.nickName = '';
+          this.isLogin = false;
+          this.loginModalFlag = true;
+          return;
+        }else{
+          this.nickName = data.result.userName;
+          this.isLogin = true;
+        }
+      })
     }
   }
 }

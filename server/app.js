@@ -23,6 +23,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next)=>{
+  if(req.cookies.userid){
+    next()
+  }else{
+    const urllist = ['/api/users/login','/api/users/logout','/api/goods']
+    if(urllist.indexOf(req.path) !=-1){
+      next()
+    }else{
+      res.json({
+        status: 10001,
+        'msg': '当前未登录',
+      })
+    }
+  }
+})
+
 for (let route in routes){
   app.use('/api/'+route, routes[route]);
 }

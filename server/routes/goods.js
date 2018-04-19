@@ -23,12 +23,12 @@ router.get('/', function(req, res, next){
   goodModel.exec({},(err,doc)=>{
       if(err){
         res.json({
-          status:'1',
+          status:1,
           'msg':err.message
         })
       }else{
         res.json({
-          status:'0',
+          status:0,
           'msg':'',
           result:{
             count:doc.length,
@@ -47,7 +47,7 @@ router.post('/addCart', function(req, res, next){
     Users.findOne({'userid':100077},  (err, userDoc) => {
     if(err){
       res.json({
-        status:'1',
+        status:1,
         'msg':err.message
       })
     }else{
@@ -60,12 +60,12 @@ router.post('/addCart', function(req, res, next){
             userDoc.save((err2,doc2)=> {
               if (err2) {
                 res.json({
-                  status: '1',
+                  status: 0,
                   'msg': err2.message
                 })
               } else {
                 res.json({
-                  status: '0',
+                  status: 0,
                   'msg': '',
                   'result': 'success',
                 })
@@ -77,7 +77,7 @@ router.post('/addCart', function(req, res, next){
         Goods.findOne({'productId':productId},  (err1, good) => {
           if(err1) {
             res.json({
-              status: '1',
+              status: 1,
               'msg': err1.message
             })
           }else{
@@ -94,12 +94,12 @@ router.post('/addCart', function(req, res, next){
               userDoc.save((err2,doc2)=>{
                 if(err2) {
                   res.json({
-                    status: '1',
+                    status: 1,
                     'msg': err2.message
                   })
                 }else{
                   res.json({
-                    status: '0',
+                    status: 0,
                     'msg': '',
                     'result': 'success',
                   })

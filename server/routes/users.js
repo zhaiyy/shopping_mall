@@ -14,7 +14,7 @@ router.post('/login',(req, res, next) => {
   Users.findOne(params,  (err, doc) => {
     if(err || doc == null){
       res.json({
-        status:'1',
+        status:1,
         'msg':err?err:'账号密码错误'
       })
     }else{
@@ -22,9 +22,13 @@ router.post('/login',(req, res, next) => {
           path:'/',
           maxAge:1000*60*60
         });
+      res.cookie('userName',doc.userName,{
+        path:'/',
+        maxAge:1000*60*60
+      })
        // res.session.user = doc;
         res.json({
-          status: '0',
+          status: 0,
           'msg': 'success',
           result:{
             "userName":doc.userName,
@@ -35,13 +39,34 @@ router.post('/login',(req, res, next) => {
 })
 router.post('/logout',(req, res, next) => {
  res.cookie('userid','',{
-   path:'/',
-   maxAge:-1
- })
+    path:'/',
+    maxAge:-1
+  })
+  res.cookie('userName','',{
+    path:'/',
+    maxAge:-1
+  })
   res.json({
-    status: '0',
+    status: 0,
     'msg': 'success',
   })
+})
+router.post('/checkLogin',(req, res, next) => {
+  if(req.cookies.userid){
+    res.json({
+      status: 0,
+      'msg': 'success',
+      result:{userName:req.cookies.userName}
+    })
+  }else{
+    res.json({
+      status: 1,
+      'msg': '未登录',
+      result:''
+    })
+  }
+
+
 })
 module.exports = router;
 

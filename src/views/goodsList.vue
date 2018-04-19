@@ -116,6 +116,10 @@
    methods:{
      getGoodslist(flag = false){
        axios.get('/api/goods',{params:this.params}).then(res=>{
+         if(res.data.status){
+           alert(res.data.msg)
+           return
+         }
          if(flag){
            this.goodsList =  this.goodsList.concat(res.data.result.data)
            if(res.data.result.count <this.params.pageSize || res.data.result.count == 0){
@@ -168,8 +172,8 @@
      },
      addCart(id){
        axios.post('/api/goods/addCart',{productId:id}).then(res=>{
-         if(!res.data.status){
-           alert(res.data.message)
+         if(res.data.status){
+           alert(res.data.msg)
          }else{
            alert('添加成功')
          }

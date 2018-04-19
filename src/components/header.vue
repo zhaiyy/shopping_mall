@@ -165,15 +165,6 @@ export default{
           this.errorTip = true;
         }else {
           this.nickName = data.result['userName'];
-          console.log(this.nickName)
-          console.log(typeof (data.result))
-          console.log(data.result)
-          for(var key in data.result){
-            console.log(key)
-            console.log(data.result[key])
-          }
-          const result =data.result;
-          console.log(data.result['userName'])
           this.isLogin = true;
           this.errorTip = false;
           this.loginModalFlag = false
@@ -182,8 +173,16 @@ export default{
       })
     },
     logout(){
-      this.nickName = '';
-      this.isLogin = false;
+      axios.post('/api/users/logout').then(res =>{
+        const data = res.data
+        if(data.status == '1'){
+          alert('登出失败')
+        }else {
+          this.nickName = '';
+          this.isLogin = false;
+        }
+      })
+
     }
   }
 }

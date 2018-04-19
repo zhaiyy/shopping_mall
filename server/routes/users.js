@@ -33,5 +33,15 @@ router.post('/login',(req, res, next) => {
     }
   })
 })
+router.post('/logout',(req, res, next) => {
+ res.cookie('userid','',{
+   path:'/',
+   maxAge:-1
+ })
+  res.json({
+    status: '0',
+    'msg': 'success',
+  })
+})
 module.exports = router;
 

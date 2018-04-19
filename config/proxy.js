@@ -16,9 +16,8 @@ module.exports = {
     changeOrigin: true,
     pathRewrite: {'^/api/users': '/api/users'}
   },
-  '/api/users/login': {
+  '/api/users/*': {
     target: Target,
     changeOrigin: true,
-    pathRewrite: {'^/api/users/login': '/api/users/login'}
   },
 }

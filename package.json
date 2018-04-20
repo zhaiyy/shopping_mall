@@ -8,7 +8,8 @@
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev  ",
     "server": "node server/bin/www",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -16,6 +17,12 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "ejs": "^2.5.7",
+    "eslint": "4.x",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-flowtype": "^2.46.2",
+    "eslint-plugin-html": "^4.0.3",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-vue": "^4.5.0",
     "express": "~4.15.5",
     "jade": "~1.11.0",
     "mockjs": "^1.0.1-beta3",
@@ -33,6 +40,7 @@
   "devDependencies": {
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
+    "babel-eslint": "8",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "babel-loader": "^7.1.1",
     "babel-plugin-syntax-jsx": "^6.18.0",

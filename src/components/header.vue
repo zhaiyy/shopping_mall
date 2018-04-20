@@ -3,7 +3,7 @@
     width: 100%;
     background-color: white;
     font-family: "moderat",sans-serif;
-    font-size: 16px;
+    font-size: 16px
   }
   .navbar {
     display: flex;
@@ -161,13 +161,13 @@ export default{
         userName:this.userName,
         userPwd:this.userPwd,
       }).then(res =>{
-        const  data = res.data;
+        const  data = res.data
         if(data.status){
-          this.errorTip = true;
+          this.errorTip = true
         }else {
-          this.nickName = data.result['userName'];
-          this.isLogin = true;
-          this.errorTip = false;
+          this.nickName = data.result['userName']
+          this.isLogin = true
+          this.errorTip = false
           this.loginModalFlag = false
 
         }
@@ -179,8 +179,8 @@ export default{
         if(data.status){
           alert('登出失败')
         }else {
-          this.nickName = '';
-          this.isLogin = false;
+          this.nickName = ''
+          this.isLogin = false
         }
       })
 
@@ -190,13 +190,13 @@ export default{
         const data = res.data
         if(data.status){
           alert(data.msg)
-          this.nickName = '';
-          this.isLogin = false;
-          this.loginModalFlag = true;
-          return;
+          this.nickName = ''
+          this.isLogin = false
+          this.loginModalFlag = true
+          return
         }else{
-          this.nickName = data.result.userName;
-          this.isLogin = true;
+          this.nickName = data.result.userName
+          this.isLogin = true
         }
       })
     }

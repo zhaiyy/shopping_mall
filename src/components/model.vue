@@ -25,17 +25,16 @@
 </style>
 <script>
     export default {
-        name: 'app',
-        props:[
-          'mdShow'
-        ],
-        data() {
-            return {}
-        },
+      name: 'app',
+      props:[
+        'mdShow'
+      ],
+      data() {
+        return {}
+      },
       methods:{
         closeModel(){
-          console.log(111)
-          this.$emit('close');
+          this.$emit('close')
         }
       }
     }

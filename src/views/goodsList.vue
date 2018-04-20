@@ -91,127 +91,126 @@
       NavBread,
       Model
     },
-    data () {
+    data() {
       return {
         msg: 'Welcome to Your Vue.js App',
-        goodsList:[],
-        busy:true,
-        mdShow:false,
-        mdShowCart:false,
-        priceFilter:[
+        goodsList: [],
+        busy: true,
+        mdShow: false,
+        mdShowCart: false,
+        priceFilter: [
           {
-            startPrice:'0.00',
-            endPrice:'500.00'
+            startPrice: '0.00',
+            endPrice: '500.00'
           },
           {
-            startPrice:'500.00',
-            endPrice:'1000.00'
+            startPrice: '500.00',
+            endPrice: '1000.00'
           },
           {
-            startPrice:'1000.00',
-            endPrice:'2000.00'
+            startPrice: '1000.00',
+            endPrice: '2000.00'
           },
         ],
-        priceChecked:'all',
-        filterBy:false,
-        overLayFlag:false,
-        isLoadingAll:false,
-        sort :false,
-        params:{
-          page:1,
-          pageSize:10,
-          sort:''
+        priceChecked: 'all',
+        filterBy: false,
+        overLayFlag: false,
+        isLoadingAll: false,
+        sort: false,
+        params: {
+          page: 1,
+          pageSize: 10,
+          sort: ''
         }
       }
     },
-    created(){
+    created() {
 
     },
-    mounted(){
+    mounted() {
       this.getGoodslist()
     },
 
-    methods:{
-      getGoodslist(flag = false){
-        axios.get('/api/goods',{params:this.params}).then(res=>{
-          if(res.data.status){
+    methods: {
+      getGoodslist(flag = false) {
+        axios.get('/api/goods', { params: this.params }).then( res => {
+          if (res.data.status) {
             alert(res.data.msg)
             return
           }
-          if(flag){
+          if (flag) {
             this.goodsList =  this.goodsList.concat(res.data.result.data)
-            if(res.data.result.count <this.params.pageSize || res.data.result.count == 0){
+            if (res.data.result.count < this.params.pageSize || res.data.result.count == 0) {
               this.busy = true
               this.isLoadingAll = true
             }
-          }else{
+          } else {
             this.isLoadingAll = res.data.result.count == 0
             this.goodsList = res.data.result.data
             this.busy = false
           }
         })
       },
-      showFilter(){
+      showFilter() {
         this.filterBy = true
         this.overLayFlag = true
       },
-      closePop(){
+      closePop() {
         this.filterBy = false
         this.overLayFlag = false
       },
-      setPriceFilter(index){
+      setPriceFilter(index) {
         this.priceChecked = index
         this.filterBy = false
         this.page = 1
         this.overLayFlag = false
         const price = this.priceFilter[this.priceChecked]
-        this.params = Object.assign({},this.params,{
-          sort:'prodcutPrice',
-          page:1,
-          priceChecked:price?price:''
+        this.params = Object.assign({}, this.params, {
+          sort: 'prodcutPrice',
+          page: 1,
+          priceChecked: price ? price : ''
         })
         this.getGoodslist()
       },
-      sortByDefault(){
+      sortByDefault() {
         this.sort = false
-        this.params = Object.assign({},this.params,{
-          sort:'',
-          page:1
+        this.params = Object.assign({}, this.params, {
+          sort: '',
+          page: 1
         })
         this.getGoodslist()
       },
-      sortByPrice(){
+      sortByPrice() {
         this.sort = true
-        this.params = Object.assign({},this.params,{
-          sort:'prodcutPrice',
-          page:1
+        this.params = Object.assign({}, this.params, {
+          sort: 'prodcutPrice',
+          page: 1
         })
         this.getGoodslist()
       },
-      addCart(id){
-        axios.post('/api/goods/addCart',{productId:id}).then(res=>{
-          if(res.data.status){
+      addCart(id) {
+        axios.post('/api/goods/addCart', { productId: id }).then( res => {
+          if (res.data.status) {
             alert(res.data.msg)
-          }else{
+          } else {
             this.mdShowCart = true
 
             // alert('添加成功')
           }
         })
       },
-      loadMore(){
-        this.busy =false
+      loadMore() {
+        this.busy = false
         setTimeout(() => {
           let page = parseInt(this.params.page)
-          page = page+1
-          this.params = Object.assign({},this.params,{
-            page:page
+          page = page + 1
+          this.params = Object.assign({}, this.params, {
+            page: page
           })
           this.getGoodslist(true)
-          //this.busy = true;
         }, 1000)
       },
-      closeModel(){
+      closeModel() {
         this.mdShow = false
         this.mdShowCart = false
       }

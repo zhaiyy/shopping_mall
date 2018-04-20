@@ -7,8 +7,8 @@ import VueLazyLoad from 'vue-lazyload'
 import vueScroll from 'vue-infinite-scroll'
 
 Vue.use(vueScroll)
-Vue.use(VueLazyLoad,{
-  loading:'/static/loading-svg/loading-bars.svg'
+Vue.use(VueLazyLoad, {
+  loading: '/static/loading-svg/loading-bars.svg'
 })
 
 Vue.config.productionTip = false

@@ -11,7 +11,7 @@ export default new Router({
     {
       path: '/',
       name: 'GoodsList',
-      component:GoodsList
+      component: GoodsList
     },
   ]
 })

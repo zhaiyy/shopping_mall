@@ -137,70 +137,70 @@
 </template>
 
 <script>
-import '@/assets/css/login.css'
-import axios from 'axios'
-export default{
-  data(){
-    return{
-      userName:'admin',
-      userPwd:'123456',
-      nickName:'',
-      isLogin:false,
-      errorTip:false,
-      loginModalFlag:false
-    }
-  },
-  computed:{
-  },
-  mounted(){
-    this.checkLogin()
-  },
-  methods:{
-    login(){
-      axios.post('/api/users/login',{
-        userName:this.userName,
-        userPwd:this.userPwd,
-      }).then(res =>{
-        const  data = res.data
-        if(data.status){
-          this.errorTip = true
-        }else {
-          this.nickName = data.result['userName']
-          this.isLogin = true
-          this.errorTip = false
-          this.loginModalFlag = false
-
-        }
-      })
+  import '@/assets/css/login.css'
+  import axios from 'axios'
+  export default{
+    data() {
+      return {
+        userName: 'admin',
+        userPwd: '123456',
+        nickName: '',
+        isLogin: false,
+        errorTip: false,
+        loginModalFlag: false
+      }
     },
-    logout(){
-      axios.post('/api/users/logout').then(res =>{
-        const data = res.data
-        if(data.status){
-          alert('登出失败')
-        }else {
-          this.nickName = ''
-          this.isLogin = false
-        }
-      })
-
+    computed: {
     },
-    checkLogin(){
-      axios.post('/api/users/checkLogin').then(res =>{
-        const data = res.data
-        if(data.status){
-          alert(data.msg)
-          this.nickName = ''
-          this.isLogin = false
-          this.loginModalFlag = true
-          return
-        }else{
-          this.nickName = data.result.userName
-          this.isLogin = true
-        }
-      })
+    mounted() {
+      this.checkLogin()
+    },
+    methods: {
+      login() {
+        axios.post('/api/users/login', {
+          userName: this.userName,
+          userPwd: this.userPwd,
+        }).then(res => {
+          const  data = res.data
+          if (data.status) {
+            this.errorTip = true
+          } else {
+            this.nickName = data.result['userName']
+            this.isLogin = true
+            this.errorTip = false
+            this.loginModalFlag = false
+
+          }
+        })
+      },
+      logout() {
+        axios.post('/api/users/logout').then(res => {
+          const data = res.data
+          if (data.status) {
+            alert('登出失败')
+          } else {
+            this.nickName = ''
+            this.isLogin = false
+          }
+        })
+
+      },
+      checkLogin() {
+        axios.post('/api/users/checkLogin').then(res => {
+          const data = res.data
+          if (data.status) {
+            alert(data.msg)
+            this.nickName = ''
+            this.isLogin = false
+            this.loginModalFlag = true
+            return
+          } else {
+            this.nickName = data.result.userName
+            this.isLogin = true
+          }
+        })
+      }
     }
   }
-}
 
 </script>

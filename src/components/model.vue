@@ -26,14 +26,14 @@
 <script>
     export default {
       name: 'app',
-      props:[
+      props: [
         'mdShow'
       ],
       data() {
         return {}
       },
-      methods:{
-        closeModel(){
+      methods: {
+        closeModel() {
           this.$emit('close')
         }
       }

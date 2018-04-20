@@ -1,19 +1,19 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 let userSchema = new Schema({
-  "userid": Number,
-  "userName": String,
-  "userPwd": String,
-  "orderList": Array,
-  "addressList": Array,
-  "carList": [{
-    "productId": Number,
-    "productName": String,
-    "prodcutPrice": Number,
-    "prodcutImg": String,
-    "checked": Number,
-    "productNum": Number,
+  'userid': Number,
+  'userName': String,
+  'userPwd': String,
+  'orderList': Array,
+  'addressList': Array,
+  'carList': [{
+    'productId': Number,
+    'productName': String,
+    'prodcutPrice': Number,
+    'prodcutImg': String,
+    'checked': Number,
+    'productNum': Number,
   }],
 })
 

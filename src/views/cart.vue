@@ -119,7 +119,7 @@
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a href="javascript:;" class="item-edit-btn">
+                    <a href="javascript:;" class="item-edit-btn" @click="deleteBtn(cart.productId)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -144,7 +144,7 @@
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
-                Item total: <span class="total-price">{{totalMoney}}</span>
+                Item total: <span class="total-price">${{totalMoney}}</span>
               </div>
               <div class="btn-wrap">
                 <a class="btn btn--red" >Checkout</a>
@@ -154,6 +154,13 @@
         </div>
       </div>
     </div>
+    <model :mdShow="mdShowCart" v-on:close="closeModel">
+      <p slot="message">你确认删除此条数据？</p>
+      <div slot="btnGruop">
+        <a class="btn btn--m" @click="deleteCart">确认</a>
+        <a class="btn btn--m btn--red" @click="mdShowCart = false">关闭</a>
+      </div>
+    </model>
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -161,6 +168,7 @@
   import NavHeader from '@/components/header'
   import NavFooter from '@/components/footer'
   import NavBread from '@/components/bread'
+  import Model from '@/components/model'
   import '@/assets/css/checkout.css'
   import axios from 'axios'
   export default{
@@ -168,7 +176,9 @@
       return {
         cartList: null,
         checkedAll: false,
-        totalMoney: 0
+        totalMoney: 0,
+        mdShowCart: false,
+        deleteCartID: null
       }
     },
     mounted() {
@@ -195,7 +205,8 @@
     components: {
       NavHeader,
       NavFooter,
-      NavBread
+      NavBread,
+      Model
     },
     methods: {
       getCartList() {
@@ -205,7 +216,22 @@
       },
       editCart() {
       },
-
+      deleteBtn(productId) {
+        this.deleteCartID = productId
+        this.mdShowCart = true
+      },
+      deleteCart() {
+        axios.delete('/api/users/cartList/' + this.deleteCartID ).then(res => {
+          if ( !res.data.status) {
+            this.deleteCartID = null
+            this.mdShowCart = false
+            this.getCartList()
+          }
+        })
+      },
+      closeModel() {
+        this.mdShowCart = false
+      }
     }
   }
 </script>

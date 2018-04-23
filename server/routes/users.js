@@ -87,5 +87,36 @@ router.get('/cartList', (req, res) => {
     }
   })
 })
+/* 删除用户购物车数据 */
+router.delete('/cartList/:productId', (req, res) => {
+  const userid = req.cookies.userid
+  const productId = req.param('productId')
+  Users.findOne({ userid: userid }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        'msg': err
+      })
+    } else {
+      doc.﻿carList = doc.﻿carList.filter(ele => {
+        return ele.productId != productId
+      })
+      doc.save( (error) => {
+        if (error) {
+          res.json({
+            status: 1,
+            'msg': err
+          })
+        } else {
+          res.json({
+            status: 0,
+            'msg': 'success',
+            result: ''
+          })
+        }
+      })
+    }
+  })
+})
 module.exports = router
 

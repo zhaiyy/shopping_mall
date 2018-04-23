@@ -84,38 +84,38 @@
               </ul>
             </div>
             <ul class="cart-item-list">
-              <li>
+              <li v-for="cart in cartList">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a href="javascipt:;" class="checkbox-btn item-check-btn">
+                    <a href="javascipt:;" class="checkbox-btn item-check-btn" v-bind:class="{'check':!!cart.checked}" @click="editCart('checked',true)">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
                       </svg>
                     </a>
                   </div>
                   <div class="cart-item-pic">
-                    <img v-lazy="'/static/1.jpg'" alt="11">
+                    <img v-lazy="'/static/'+cart.prodcutImg" :alt="cart.productName">
                   </div>
                   <div class="cart-item-title">
-                    <div class="item-name">11</div>
+                    <div class="item-name">{{cart.productName}}</div>
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price">100</div>
+                  <div class="item-price">${{cart.prodcutPrice}}</div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
                         <a class="input-sub" >-</a>
-                        <span class="select-ipt">1</span>
+                        <span class="select-ipt">{{cart.productNum}}</span>
                         <a class="input-add" >+</a>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total">11111</div>
+                  <div class="item-price-total">${{cart.productNum * cart.prodcutPrice}}</div>
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
@@ -135,7 +135,7 @@
             <div class="cart-foot-l">
               <div class="item-all-check">
                 <a href="javascipt:;">
-                  <span class="checkbox-btn item-check-btn" >
+                  <span class="checkbox-btn item-check-btn" :class="{ 'checked': checkedAll}" >
                       <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
                   </span>
                   <span>Select all</span>
@@ -144,7 +144,7 @@
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
-                Item total: <span class="total-price">11111</span>
+                Item total: <span class="total-price">{{totalMoney}}</span>
               </div>
               <div class="btn-wrap">
                 <a class="btn btn--red" >Checkout</a>
@@ -162,20 +162,49 @@
   import NavFooter from '@/components/footer'
   import NavBread from '@/components/bread'
   import '@/assets/css/checkout.css'
+  import axios from 'axios'
   export default{
     data() {
       return {
+        cartList: null,
+        checkedAll: false,
+        totalMoney: 0
       }
     },
-    mounted() {},
+    mounted() {
+      this.getCartList()
+    },
     filters: {},
-    computed: {},
+    computed: {
+    },
+    watch: {
+      'cartList'(val) {
+        if (val) {
+          this.totalMoney = 0
+          let num = 0
+          for (let ele of val) {
+            if (ele.checked == '1') {
+              this.totalMoney += ele.prodcutPrice * ele.productNum
+              num++
+            }
+          }
+          this.checkedAll = !!(num == val.length)
+        }
+      }
+    },
     components: {
       NavHeader,
       NavFooter,
       NavBread
     },
     methods: {
+      getCartList() {
+        axios.get('/api/users/cartList').then( res => {
+          this.cartList = res.data.result
+        })
+      },
+      editCart() {
+      },
 
     }
   }

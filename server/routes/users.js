@@ -65,8 +65,27 @@ router.post('/checkLogin', (req, res) => {
       result: ''
     })
   }
+})
 
-
+/* 查询用户购物车数据 */
+router.get('/cartList', (req, res) => {
+  const userid = req.cookies.userid
+  Users.findOne({ userid: userid }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        'msg': err
+      })
+    } else {
+      if (doc) {
+        res.json({
+          status: 0,
+          'msg': 'success',
+          result: doc.carList
+        })
+      }
+    }
+  })
 })
 module.exports = router
 

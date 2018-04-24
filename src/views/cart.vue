@@ -135,7 +135,7 @@
           <div class="cart-foot-inner">
             <div class="cart-foot-l">
               <div class="item-all-check">
-                <a href="javascipt:;">
+                <a href="javascipt:;" @click="editCart('all',{'checked':checkedAll?0:1})">
                   <span class="checkbox-btn item-check-btn" :class="{ 'checked': checkedAll}" >
                       <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
                   </span>
@@ -194,8 +194,8 @@
           this.totalMoney = 0
           let num = 0
           for (let ele of val) {
-            if (ele.checked == '1') {
-              this.totalMoney += ele.prodcutPrice * ele.productNum
+            if (ele.checked) {
+              this.totalMoney = this.totalMoney + ele.prodcutPrice * ele.productNum
               num++
             }
           }

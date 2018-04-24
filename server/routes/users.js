@@ -130,6 +130,9 @@ router.put('/cartList/:productId', (req, res) => {
       })
     } else {
       for (let ele of doc.carList ) {
+        if (productId == 'all') {
+          ele = Object.assign(ele, params)
+        }
         if (ele.productId == productId) {
           ele = Object.assign(ele, params)
         }

@@ -102,7 +102,7 @@
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price">${{cart.prodcutPrice}}</div>
+                  <div class="item-price">${{cart.prodcutPrice | currency}}</div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
@@ -116,7 +116,7 @@
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total">${{cart.productNum * cart.prodcutPrice}}</div>
+                  <div class="item-price-total">${{cart.productNum * cart.prodcutPrice | currency}}</div>
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
@@ -145,7 +145,7 @@
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
-                Item total: <span class="total-price">${{totalMoney}}</span>
+                Item total: <span class="total-price">${{totalMoney | currency}}</span>
               </div>
               <div class="btn-wrap">
                 <a class="btn btn--red" >Checkout</a>
@@ -185,7 +185,12 @@
     mounted() {
       this.getCartList()
     },
-    filters: {},
+    filters: {
+      currency(num) {
+        return num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+
+      }
+    },
     computed: {
     },
     watch: {

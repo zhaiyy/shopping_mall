@@ -148,7 +148,7 @@
                 Item total: <span class="total-price">${{totalMoney | currency}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red" >Checkout</a>
+                <a class="btn btn--red" :class="{'btn--dis': checkoutCount==0 }"  @click="checkout">Checkout</a>
               </div>
             </div>
           </div>
@@ -192,6 +192,16 @@
       }
     },
     computed: {
+      checkoutCount() {
+        let num = 0
+        if (!this.cartList) return
+        for (let ele of this.cartList) {
+          if (ele.checked) {
+            num++
+          }
+        }
+        return num
+      }
     },
     watch: {
       'cartList'(val) {
@@ -240,6 +250,12 @@
             this.mdShowCart = false
             this.getCartList()
           }
+        })
+      },
+      checkout() {
+        if (!this.checkoutCount) return
+        this.$router.push({
+          name: 'Address'
         })
       },
       closeModel() {

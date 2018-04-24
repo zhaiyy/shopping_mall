@@ -155,5 +155,57 @@ router.put('/cartList/:productId', (req, res) => {
     }
   })
 })
+/* 查询用户地址数据 */
+router.get('/addressList', (req, res) => {
+  const userid = req.cookies.userid
+  Users.findOne({ userid: userid }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        'msg': err
+      })
+    } else {
+      if (doc) {
+        res.json({
+          status: 0,
+          'msg': 'success',
+          result: doc.addressList
+        })
+      }
+    }
+  })
+})
+/* 删除用户地址数据 */
+router.delete('/addressList/:addressId', (req, res) => {
+  const userid = req.cookies.userid
+  const addressId = req.param('addressId')
+  Users.findOne({ userid: userid }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        'msg': err
+      })
+    } else {
+      doc.﻿﻿addressList = doc.﻿﻿addressList.filter(ele => {
+        return ele.addressId != addressId
+      })
+      doc.save( (error) => {
+        if (error) {
+          res.json({
+            status: 1,
+            'msg': err
+          })
+        } else {
+          res.json({
+            status: 0,
+            'msg': 'success',
+            result: ''
+          })
+        }
+      })
+    }
+  })
+})
+/* 查询用户地址数据 */
 module.exports = router
 

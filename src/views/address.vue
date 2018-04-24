@@ -60,7 +60,7 @@
           <div class="addr-list-wrap">
             <div class="addr-list">
               <ul>
-                <li v-for="address in addressList">
+                <li v-for="(address,index) in addressListFilter" :class="{'check': index == checkIndex}" @click="checkIndex = index">
                   <dl>
                     <dt>{{address.﻿userName}}</dt>
                     <dd class="address">{{address.﻿﻿streetName}}</dd>
@@ -71,10 +71,10 @@
                       <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                     </a>
                   </div>
-                  <div class="addr-opration addr-set-default">
-                    <a href="javascript:;" class="addr-set-default-btn"><i>Set default</i></a>
+                  <div class="addr-opration addr-set-default" v-show="!address.﻿isDefault">
+                    <a href="javascript:;" class="addr-set-default-btn" @click="editCart(address.﻿﻿addressId, {﻿isDefault: true})"><i>Set default</i></a>
                   </div>
-                  <div class="addr-opration addr-default" >Default address</div>
+                  <div class="addr-opration addr-default" v-if="address.﻿isDefault" >Default address</div>
                 </li>
                 <li class="addr-new">
                   <div class="add-new-inner">
@@ -88,7 +88,7 @@
             </div>
 
             <div class="shipping-addr-more">
-              <a class="addr-more-btn up-down-btn" href="javascript:;">
+              <a class="addr-more-btn up-down-btn" href="javascript:;" @click="expend" :class="{'open':limit == addressList.length}">
                 more
                 <i class="i-up-down">
                   <i class="i-up-down-l"></i>
@@ -147,14 +147,19 @@
     data() {
       return {
         isMdShow: false,
-        addressList: null,
-        deleteAddressId: null
+        addressList: [],
+        checkIndex: 0,
+        limit: 3,
+        deleteAddressId: []
       }
     },
     mounted() {
       this.getAddress()
     },
     computed: {
+      addressListFilter() {
+        return this.addressList.slice(0, this.limit)
+      }
     },
     components: {
       NavHeader,
@@ -182,6 +187,21 @@
             this.getAddress()
           }
         })
+      },
+      editCart(addressID, params) {
+        axios.put('/api/users/addressList/' + addressID, params).then(res => {
+          if ( !res.data.status) {
+            this.getAddress()
+          }
+        })
+      },
+      expend() {
+        if ( this.limit == this.addressList.length) {
+          this.limit = 3
+        } else {
+          this.limit = this.addressList.length
+        }
+        console.log(this.limit)
       },
       closeModal() {
         this.isMdShow = true

@@ -206,6 +206,42 @@ router.delete('/addressList/:addressId', (req, res) => {
     }
   })
 })
-/* 查询用户地址数据 */
+/* 修改用户地址数据 */
+router.put('/addressList/:addressId', (req, res) => {
+  const userid = req.cookies.userid
+  const addressId = req.param('addressId')
+  const params = req.body
+  Users.findOne({ userid: userid }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        'msg': err
+      })
+    } else {
+      for (let ele of doc.addressList ) {
+        if (params.isDefault) {
+          ele.isDefault = false
+        }
+        if (ele.addressId == addressId) {
+          ele = Object.assign(ele, params)
+        }
+      }
+      doc.save( (error) => {
+        if (error) {
+          res.json({
+            status: 1,
+            'msg': err
+          })
+        } else {
+          res.json({
+            status: 0,
+            'msg': 'success',
+            result: ''
+          })
+        }
+      })
+    }
+  })
+})
 module.exports = router
 

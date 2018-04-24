@@ -118,5 +118,38 @@ router.delete('/cartList/:productId', (req, res) => {
     }
   })
 })
+router.put('/cartList/:productId', (req, res) => {
+  const userid = req.cookies.userid
+  const productId = req.param('productId')
+  const params = req.body
+  Users.findOne({ userid: userid }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        'msg': err
+      })
+    } else {
+      for (let ele of doc.carList ) {
+        if (ele.productId == productId) {
+          ele = Object.assign(ele, params)
+        }
+      }
+      doc.save( (error) => {
+        if (error) {
+          res.json({
+            status: 1,
+            'msg': err
+          })
+        } else {
+          res.json({
+            status: 0,
+            'msg': 'success',
+            result: ''
+          })
+        }
+      })
+    }
+  })
+})
 module.exports = router
 

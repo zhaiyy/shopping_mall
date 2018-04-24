@@ -87,7 +87,8 @@
               <li v-for="cart in cartList">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a href="javascipt:;" class="checkbox-btn item-check-btn" v-bind:class="{'check':!!cart.checked}" @click="editCart('checked',true)">
+                    <a href="javascipt:;" class="checkbox-btn item-check-btn" v-bind:class="{'check':!!cart.checked}"
+                       @click="editCart(cart.productId, {'checked': cart.checked == 1? 0 : 1})">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
                       </svg>
@@ -107,9 +108,9 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub" >-</a>
+                        <a class="input-sub" @click="editCart(cart.productId, {productNum: cart.productNum-1})">-</a>
                         <span class="select-ipt">{{cart.productNum}}</span>
-                        <a class="input-add" >+</a>
+                        <a class="input-add"  @click="editCart(cart.productId, {productNum: cart.productNum+1})">+</a>
                       </div>
                     </div>
                   </div>
@@ -214,7 +215,14 @@
           this.cartList = res.data.result
         })
       },
-      editCart() {
+      editCart(cartID, params) {
+        axios.put('/api/users/cartList/' + cartID, params).then(res => {
+          if ( !res.data.status) {
+            this.deleteCartID = null
+            this.mdShowCart = false
+            this.getCartList()
+          }
+        })
       },
       deleteBtn(productId) {
         this.deleteCartID = productId

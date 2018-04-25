@@ -60,7 +60,7 @@
           <div class="addr-list-wrap">
             <div class="addr-list">
               <ul>
-                <li v-for="(address,index) in addressListFilter" :class="{'check': index == checkIndex}" @click="checkIndex = index">
+                <li v-for="(address,index) in addressListFilter" :class="{'check': index == checkIndex}" @click="checkAddress(index, address.addressId)">
                   <dl>
                     <dt>{{address.﻿userName}}</dt>
                     <dd class="address">{{address.﻿﻿streetName}}</dd>
@@ -71,10 +71,10 @@
                       <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                     </a>
                   </div>
-                  <div class="addr-opration addr-set-default" v-show="!address.﻿isDefault">
+                  <div class="addr-opration addr-set-default" v-if="!address.﻿isDefault">
                     <a href="javascript:;" class="addr-set-default-btn" @click="editCart(address.﻿﻿addressId, {﻿isDefault: true})"><i>Set default</i></a>
                   </div>
-                  <div class="addr-opration addr-default" v-if="address.﻿isDefault" >Default address</div>
+                  <div class="addr-opration addr-default" v-else >Default address</div>
                 </li>
                 <li class="addr-new">
                   <div class="add-new-inner">
@@ -116,9 +116,8 @@
             </div>
           </div>
           <div class="next-btn-wrap">
-<!--
-            <router-link class="btn btn&#45;&#45;m btn&#45;&#45;red" >Next</router-link>
--->
+            <router-link class="btn btn--m btn--red"
+                         :to="{name:'OrderList',params:{'addressId':checkedID}}" >Next</router-link>
           </div>
         </div>
       </div>
@@ -150,7 +149,8 @@
         addressList: [],
         checkIndex: 0,
         limit: 3,
-        deleteAddressId: []
+        deleteAddressId: [],
+        checkedID: null
       }
     },
     mounted() {
@@ -172,6 +172,7 @@
         axios.get('/api/users/addressList').then(res => {
           if (!res.data.status) {
             this.addressList = res.data.result
+            this.checkedID = this.addressList[0].addressId
           }
         })
       },
@@ -195,13 +196,16 @@
           }
         })
       },
+      checkAddress(index, addressId) {
+        this.checkIndex = index
+        this.checkedID = addressId
+      },
       expend() {
         if ( this.limit == this.addressList.length) {
           this.limit = 3
         } else {
           this.limit = this.addressList.length
         }
-        console.log(this.limit)
       },
       closeModal() {
         this.isMdShow = true

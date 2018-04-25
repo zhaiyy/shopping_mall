@@ -156,6 +156,15 @@
     mounted() {
       this.getAddress()
     },
+    watch: {
+      'addressList'(val) {
+        val.forEach( ele => {
+          if (ele.isDefault) {
+            this.checkedID = ele.addressId
+          }
+        })
+      }
+    },
     computed: {
       addressListFilter() {
         let list = this.addressList.filter( ele => {
@@ -166,6 +175,7 @@
           return !ele.isDefault
         }).slice(0, limit)
         list = list.concat(filterList)
+        this.checkIndex = 0
         return list
       }
     },
@@ -180,11 +190,6 @@
         axios.get('/api/users/addressList').then(res => {
           if (!res.data.status) {
             this.addressList = res.data.result
-            this.addressList.forEach( ele => {
-              if (ele.isDefault) {
-                this.checkedID = ele.addressId
-              }
-            })
           }
         })
       },

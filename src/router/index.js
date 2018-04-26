@@ -4,6 +4,7 @@ import GoodsList from '@/views/goodsList'
 import Cart from '@/views/cart'
 import Address from '@/views/address'
 import OrderList from '@/views/orderList'
+import Payment from '@/views/payment'
 
 
 Vue.use(Router)
@@ -30,6 +31,11 @@ export default new Router({
       path: '/orderList/:addressId',
       name: 'OrderList',
       component: OrderList
+    },
+    {
+      path: '/payment/:orderId',
+      name: 'Payment',
+      component: Payment
     },
   ]
 })

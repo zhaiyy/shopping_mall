@@ -176,6 +176,17 @@
         })
       },
       payMent() {
+        axios.post('/api/users/payment', {
+          'addressId': this.$route.params.addressId,
+          'orderTotal': this.orderTotal,
+        }).then(response => {
+          const res = response.data
+          if (!res.status) {
+            this.$router.push({ name: 'payment', params: { 'orderId': res.result.orderId }})
+          } else {
+            alert(res.msg)
+          }
+        })
       }
     }
   }

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Users = require('../models/users')
+const Util = require('../util/util')
 
 
 router.get('/', function(req, res) {
@@ -242,6 +243,67 @@ router.put('/addressList/:addressId', (req, res) => {
       })
     }
   })
+})
+router.post('/payment', (req, res) => {
+  const userid = req.cookies.userid
+  const orderTotal = req.body.orderTotal
+  const addressId = req.body.addressId
+  Users.findOne({ userid: userid }, (err, doc) => {
+    console.log(err)
+    if (err) {
+      res.json({
+        status: 1,
+        'msg': err
+      })
+    } else {
+      // 获取当前用户的地址信息
+      let address = doc.﻿﻿addressList
+      address = address.filter(ele => {
+        return ele.addressId == addressId
+      })
+      // 获取用户购物车的购买的商品
+      let cartList = doc.﻿﻿carList
+      cartList = cartList.filter(ele => {
+        return ele.checked
+      })
+      doc.﻿﻿carList = doc.﻿﻿carList.filter(ele => {
+        return !ele.checked
+      })
+      const platForm = '622'
+      const rd1 = Math.floor(Math.random() * 10)
+      const rd2 = Math.floor(Math.random() * 10)
+      const date = new Date().Format('yyyyMMddhhmmss')
+      let order  = {
+        orderId: platForm + rd1 + date + rd2,
+        orderTotal: orderTotal,
+        addressInfo: address,
+        goodsList: cartList,
+        createDate: new Date().Format('yyyy-MM-dd hh:mm:ss'),
+        orderStatus: '1'
+      }
+      doc.﻿orderList.push(order)
+      doc.save( (error) => {
+        console.log(error)
+        if (error) {
+          res.json({
+            status: 1,
+            'msg': error
+          })
+        } else {
+          res.json({
+            status: 0,
+            'msg': 'success',
+            result: {
+              orderId: order.orderId,
+              orderTotal: order.orderTotal,
+            }
+          })
+        }
+      })
+    }
+  })
+
+
 })
 module.exports = router
 

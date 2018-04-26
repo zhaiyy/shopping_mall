@@ -33,7 +33,7 @@
                   </div>
                   <div class="main">
                     <div class="name">{{key.productName}}</div>
-                    <div class="price">{{key.prodcutPrice}}</div>
+                    <div class="price">${{key.prodcutPrice | currency}}</div>
                     <div class="btn-area">
                       <a href="javascript:;" class="btn btn--m" @click="addCart(key.productId)">加入购物车</a>
                     </div>
@@ -83,6 +83,8 @@
   import NavFooter from '@/components/footer'
   import NavBread from '@/components/bread'
   import Model from '@/components/model'
+  import { currency } from '@/util/util'
+
   export default {
     name: 'goodsList',
     components: {
@@ -123,6 +125,9 @@
           sort: ''
         }
       }
+    },
+    filters: {
+      currency: currency
     },
     created() {
 

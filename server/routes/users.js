@@ -305,5 +305,38 @@ router.post('/payment', (req, res) => {
 
 
 })
+/* 获取订单详情 */
+router.get('/orderList/:orderId', (req, res) => {
+  const userid = req.cookies.userid
+  const orderId = req.param('orderId')
+  Users.findOne({ userid: userid }, (err, doc) => {
+    console.log(err)
+    if (err) {
+      res.json({
+        status: 1,
+        'msg': err
+      })
+    } else {
+      console.log(doc)
+      if (doc && doc.﻿orderList.length) {
+        doc.﻿orderList.forEach( ele => {
+          if (ele.orderId == orderId) {
+            res.json({
+              status: 0,
+              'msg': 'success',
+              result: ele
+            })
+          }
+        })
+      } else {
+        res.json({
+          status: 1,
+          'msg': '没有此订单'
+        })
+      }
+    }
+  })
+})
+
 module.exports = router
 

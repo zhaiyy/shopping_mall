@@ -182,7 +182,7 @@
         }).then(response => {
           const res = response.data
           if (!res.status) {
-            this.$router.push({ name: 'payment', params: { 'orderId': res.result.orderId }})
+            this.$router.push({ name: 'OrderSuccess', params: { 'orderId': res.result.orderId }})
           } else {
             alert(res.msg)
           }

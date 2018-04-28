@@ -126,6 +126,11 @@
         }
       }
     },
+    computed: {
+      cartCount() {
+        return parseInt(this.$store.state.cartCount)
+      }
+    },
     filters: {
       currency: currency
     },
@@ -135,7 +140,6 @@
     mounted() {
       this.getGoodslist()
     },
-
     methods: {
       getGoodslist(flag = false) {
         axios.get('/api/goods', { params: this.params }).then( res => {
@@ -199,6 +203,7 @@
             alert(res.data.msg)
           } else {
             this.mdShowCart = true
+            this.$store.commit('updateCartCount', this.cartCount + 1)
 
             // alert('添加成功')
           }

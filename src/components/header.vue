@@ -92,7 +92,7 @@
           <a href="javascript:void(0)" class="navbar-link" v-if="!isLogin"  @click="loginModalFlag=true">Login</a>
           <a href="javascript:void(0)" class="navbar-link" v-else @click="logout">Logout</a>
           <div class="navbar-cart-container">
-            <span class="navbar-cart-count"></span>
+            <span class="navbar-cart-count">{{cartCount}}</span>
             <a class="navbar-link navbar-cart-link" href="/cart">
               <svg class="navbar-cart-logo">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -144,13 +144,18 @@
       return {
         userName: 'admin',
         userPwd: '123456',
-        nickName: '',
         isLogin: false,
         errorTip: false,
         loginModalFlag: false
       }
     },
     computed: {
+      nickName() {
+        return this.$store.state.nickName
+      },
+      cartCount() {
+        return this.$store.state.cartCount
+      }
     },
     mounted() {
       this.checkLogin()
@@ -165,7 +170,9 @@
           if (data.status) {
             this.errorTip = true
           } else {
-            this.nickName = data.result['userName']
+            this.$store.commit('updateUserInfo', data.result['userName'])
+            this.$store.commit('updateCartCount', data.result['cartCount'])
+            // this.nickName = data.result['userName']
             this.isLogin = true
             this.errorTip = false
             this.loginModalFlag = false
@@ -179,7 +186,8 @@
           if (data.status) {
             alert('登出失败')
           } else {
-            this.nickName = ''
+            this.$store.commit('updateUserInfo', '')
+            // this.nickName = ''
             this.isLogin = false
           }
         })
@@ -190,12 +198,15 @@
           const data = res.data
           if (data.status) {
             alert(data.msg)
-            this.nickName = ''
+            this.$store.commit('updateUserInfo', '')
+            // this.nickName = ''
             this.isLogin = false
             this.loginModalFlag = true
             return
           } else {
-            this.nickName = data.result.userName
+            this.$store.commit('updateUserInfo', data.result.userName)
+            this.$store.commit('updateCartCount', data.result.cartCount)
+            // this.nickName = data.result.userName
             this.isLogin = true
           }
         })

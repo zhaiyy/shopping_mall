@@ -108,7 +108,7 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub" @click="editCart(cart.productId, {productNum: cart.productNum-1})">-</a>
+                        <a class="input-sub"  @click="editCart(cart.productId, {productNum: cart.productNum-1})">-</a>
                         <span class="select-ipt">{{cart.productNum}}</span>
                         <a class="input-add"  @click="editCart(cart.productId, {productNum: cart.productNum+1})">+</a>
                       </div>
@@ -148,7 +148,7 @@
                 Item total: <span class="total-price">${{totalMoney | currency}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red" >Checkout</a>
+                <a class="btn btn--red" :class="{'btn--dis': checkoutCount==0 }"  @click="checkout">Checkout</a>
               </div>
             </div>
           </div>
@@ -192,6 +192,19 @@
       }
     },
     computed: {
+      checkoutCount() {
+        let num = 0
+        if (!this.cartList) return
+        for (let ele of this.cartList) {
+          if (ele.checked) {
+            num++
+          }
+        }
+        return num
+      },
+      cartCount() {
+        return this.$store.state.cartCount
+      }
     },
     watch: {
       'cartList'(val) {
@@ -221,11 +234,16 @@
         })
       },
       editCart(cartID, params) {
+        if (params.productNum != null && params.productNum < 0 ) {
+          alert('数量不能小于0')
+          return
+        }
         axios.put('/api/users/cartList/' + cartID, params).then(res => {
           if ( !res.data.status) {
             this.deleteCartID = null
             this.mdShowCart = false
             this.getCartList()
+            this.$store.dispatch('getCartCount')
           }
         })
       },
@@ -239,7 +257,14 @@
             this.deleteCartID = null
             this.mdShowCart = false
             this.getCartList()
+            this.$store.dispatch('getCartCount')
           }
+        })
+      },
+      checkout() {
+        if (!this.checkoutCount) return
+        this.$router.push({
+          name: 'Address'
         })
       },
       closeModel() {

@@ -139,6 +139,7 @@
 <script>
   import '@/assets/css/login.css'
   import axios from 'axios'
+  import { mapState } from 'vuex'
   export default{
     data() {
       return {
@@ -150,12 +151,10 @@
       }
     },
     computed: {
-      nickName() {
-        return this.$store.state.nickName
-      },
-      cartCount() {
-        return this.$store.state.cartCount
-      }
+      ...mapState([
+        'nickName',
+        'cartCount'
+      ])
     },
     mounted() {
       this.checkLogin()

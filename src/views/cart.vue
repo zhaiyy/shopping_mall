@@ -108,9 +108,9 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub"  @click="editCart(cart.productId, {productNum: cart.productNum-1}, -1)">-</a>
+                        <a class="input-sub"  @click="editCart(cart.productId, {productNum: cart.productNum-1})">-</a>
                         <span class="select-ipt">{{cart.productNum}}</span>
-                        <a class="input-add"  @click="editCart(cart.productId, {productNum: cart.productNum+1}, +1)">+</a>
+                        <a class="input-add"  @click="editCart(cart.productId, {productNum: cart.productNum+1})">+</a>
                       </div>
                     </div>
                   </div>
@@ -233,7 +233,7 @@
           this.cartList = res.data.result
         })
       },
-      editCart(cartID, params, count) {
+      editCart(cartID, params) {
         if (params.productNum != null && params.productNum < 0 ) {
           alert('数量不能小于0')
           return
@@ -243,9 +243,7 @@
             this.deleteCartID = null
             this.mdShowCart = false
             this.getCartList()
-            if (count) {
-              this.$store.commit('updateCartCount', this.cartCount + count)
-            }
+            this.$store.dispatch('getCartCount')
           }
         })
       },
@@ -259,7 +257,7 @@
             this.deleteCartID = null
             this.mdShowCart = false
             this.getCartList()
-            this.$store.commit('updateCartCount', this.cartCount - parseInt(res.data.result['productNum']))
+            this.$store.dispatch('getCartCount')
           }
         })
       },

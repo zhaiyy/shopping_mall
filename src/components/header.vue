@@ -92,7 +92,7 @@
           <a href="javascript:void(0)" class="navbar-link" v-if="!isLogin"  @click="loginModalFlag=true">Login</a>
           <a href="javascript:void(0)" class="navbar-link" v-else @click="logout">Logout</a>
           <div class="navbar-cart-container">
-            <span class="navbar-cart-count">{{cartCount}}</span>
+            <span class="navbar-cart-count" v-if="cartCount">{{cartCount}}</span>
             <a class="navbar-link navbar-cart-link" href="/cart">
               <svg class="navbar-cart-logo">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -170,9 +170,7 @@
           if (data.status) {
             this.errorTip = true
           } else {
-            this.$store.commit('updateUserInfo', data.result['userName'])
-            this.$store.commit('updateCartCount', data.result['cartCount'])
-            // this.nickName = data.result['userName']
+            this.$store.dispatch('getCartCount')
             this.isLogin = true
             this.errorTip = false
             this.loginModalFlag = false
@@ -187,7 +185,7 @@
             alert('登出失败')
           } else {
             this.$store.commit('updateUserInfo', '')
-            // this.nickName = ''
+            this.$store.commit('updateCartCount', 0)
             this.isLogin = false
           }
         })
@@ -198,19 +196,17 @@
           const data = res.data
           if (data.status) {
             alert(data.msg)
-            this.$store.commit('updateUserInfo', '')
             // this.nickName = ''
             this.isLogin = false
             this.loginModalFlag = true
             return
           } else {
-            this.$store.commit('updateUserInfo', data.result.userName)
-            this.$store.commit('updateCartCount', data.result.cartCount)
+            this.$store.dispatch('getCartCount')
             // this.nickName = data.result.userName
             this.isLogin = true
           }
         })
-      }
+      },
     }
   }
 

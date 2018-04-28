@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Users = require('../models/users')
-// const Util = require('../util/util')
+require('../util/util')
 
 
 router.get('/', function(req, res) {
@@ -58,6 +58,24 @@ router.post('/logout', (req, res) => {
   })
 })
 router.post('/checkLogin', (req, res) => {
+  if (req.cookies.userid) {
+    res.json({
+      status: 0,
+      'msg': 'success',
+      result: {
+        'userName': req.cookies.userName,
+      }
+    })
+  } else {
+    res.json({
+      status: 1,
+      'msg': '未登录',
+      result: ''
+    })
+  }
+})
+// 获取购物车数量
+router.get('/cartCount', (req, res) => {
   if (req.cookies.userid) {
     Users.findOne({ userid: req.cookies.userid },  (err, doc) => {
       if (err || doc == null) {
@@ -342,7 +360,6 @@ router.get('/orderList/:orderId', (req, res) => {
         'msg': err
       })
     } else {
-      console.log(doc)
       if (doc && doc.﻿orderList.length) {
         doc.﻿orderList.forEach( ele => {
           if (ele.orderId == orderId) {

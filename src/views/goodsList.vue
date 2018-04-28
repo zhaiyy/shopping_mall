@@ -126,11 +126,6 @@
         }
       }
     },
-    computed: {
-      cartCount() {
-        return parseInt(this.$store.state.cartCount)
-      }
-    },
     filters: {
       currency: currency
     },
@@ -203,8 +198,7 @@
             alert(res.data.msg)
           } else {
             this.mdShowCart = true
-            this.$store.commit('updateCartCount', this.cartCount + 1)
-
+            this.$store.dispatch('getCartCount')
             // alert('添加成功')
           }
         })

@@ -61,6 +61,11 @@
     mounted() {
       this.getOrderList()
     },
+    computed: {
+      cartCount() {
+        return parseInt(this.$store.state.cartCount)
+      }
+    },
     methods: {
       getOrderList() {
         const orderId = this.$route.params.orderId
@@ -69,6 +74,7 @@
           if (!res.status) {
             this.orderTotal = res.result.orderTotal
             this.orderId = res.result.orderId
+            this.$store.dispatch('getCartCount')
           }
         })
       }

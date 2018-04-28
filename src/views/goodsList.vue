@@ -135,7 +135,6 @@
     mounted() {
       this.getGoodslist()
     },
-
     methods: {
       getGoodslist(flag = false) {
         axios.get('/api/goods', { params: this.params }).then( res => {
@@ -199,7 +198,7 @@
             alert(res.data.msg)
           } else {
             this.mdShowCart = true
-
+            this.$store.dispatch('getCartCount')
             // alert('添加成功')
           }
         })

@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Users = require('../models/users')
-const Util = require('../util/util')
+require('../util/util')
 
 
 router.get('/', function(req, res) {
@@ -28,11 +28,16 @@ router.post('/login', (req, res) => {
         maxAge: 1000 * 60 * 60
       })
       // res.session.user = doc;
+      let cartCount = 0
+      doc.﻿carList.forEach( ele => {
+        cartCount += parseInt(ele['﻿productNum'])
+      })
       res.json({
         status: 0,
         'msg': 'success',
         result: {
           'userName': doc.userName,
+          'cartCount': cartCount
         }
       })
     }
@@ -57,7 +62,41 @@ router.post('/checkLogin', (req, res) => {
     res.json({
       status: 0,
       'msg': 'success',
-      result: { userName: req.cookies.userName }
+      result: {
+        'userName': req.cookies.userName,
+      }
+    })
+  } else {
+    res.json({
+      status: 1,
+      'msg': '未登录',
+      result: ''
+    })
+  }
+})
+// 获取购物车数量
+router.get('/cartCount', (req, res) => {
+  if (req.cookies.userid) {
+    Users.findOne({ userid: req.cookies.userid },  (err, doc) => {
+      if (err || doc == null) {
+        res.json({
+          status: 1,
+          'msg': err
+        })
+      } else {
+        let cartCount = 0
+        doc.﻿carList.forEach( ele => {
+          cartCount += parseInt(ele['productNum'])
+        })
+        res.json({
+          status: 0,
+          'msg': 'success',
+          result: {
+            'userName': doc.userName,
+            'cartCount': cartCount
+          }
+        })
+      }
     })
   } else {
     res.json({
@@ -99,7 +138,11 @@ router.delete('/cartList/:productId', (req, res) => {
         'msg': err
       })
     } else {
+      let cartList = null
       doc.﻿carList = doc.﻿carList.filter(ele => {
+        if (ele.productId == productId) {
+          cartList = ele
+        }
         return ele.productId != productId
       })
       doc.save( (error) => {
@@ -112,7 +155,7 @@ router.delete('/cartList/:productId', (req, res) => {
           res.json({
             status: 0,
             'msg': 'success',
-            result: ''
+            result: cartList
           })
         }
       })
@@ -317,7 +360,6 @@ router.get('/orderList/:orderId', (req, res) => {
         'msg': err
       })
     } else {
-      console.log(doc)
       if (doc && doc.﻿orderList.length) {
         doc.﻿orderList.forEach( ele => {
           if (ele.orderId == orderId) {

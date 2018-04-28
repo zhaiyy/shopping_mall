@@ -108,7 +108,7 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub" @click="editCart(cart.productId, {productNum: cart.productNum-1})">-</a>
+                        <a class="input-sub"  @click="editCart(cart.productId, {productNum: cart.productNum-1})">-</a>
                         <span class="select-ipt">{{cart.productNum}}</span>
                         <a class="input-add"  @click="editCart(cart.productId, {productNum: cart.productNum+1})">+</a>
                       </div>
@@ -201,6 +201,9 @@
           }
         }
         return num
+      },
+      cartCount() {
+        return this.$store.state.cartCount
       }
     },
     watch: {
@@ -231,11 +234,16 @@
         })
       },
       editCart(cartID, params) {
+        if (params.productNum != null && params.productNum < 0 ) {
+          alert('数量不能小于0')
+          return
+        }
         axios.put('/api/users/cartList/' + cartID, params).then(res => {
           if ( !res.data.status) {
             this.deleteCartID = null
             this.mdShowCart = false
             this.getCartList()
+            this.$store.dispatch('getCartCount')
           }
         })
       },
@@ -249,6 +257,7 @@
             this.deleteCartID = null
             this.mdShowCart = false
             this.getCartList()
+            this.$store.dispatch('getCartCount')
           }
         })
       },
